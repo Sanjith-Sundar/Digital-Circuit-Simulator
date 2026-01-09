@@ -2,7 +2,7 @@ import { services } from "./data"
 
 export default function Services() {
   return (
-    <section id="services" className="my-20">
+    <section id="services" className="my-20 scroll-mt-20">
       <h2 className="text-black dark:text-white mb-6 text-3xl md:text-4xl lg:text-5xl font-medium leading-tight">
         Your Circuit
         <span className="block text-[#7A7FEE] dark:text-[#7A7FEE]">Learning Journey</span>
