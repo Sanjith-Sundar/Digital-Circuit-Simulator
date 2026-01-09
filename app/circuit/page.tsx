@@ -159,6 +159,8 @@ function CircuitMaker() {
   const [currentCircuitId, setCurrentCircuitId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
+  const [minimapMinimized, setMinimapMinimized] = useState(false);
+
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
@@ -812,7 +814,61 @@ function CircuitMaker() {
                   size={1}
                 />
                 <Controls />
-                <MiniMap />
+                 {/* Minimap container */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 10,
+                  right: 10,
+                  zIndex: 5,
+                  background: "rgba(0,0,0,0.6)",
+                  backdropFilter: "blur(6px)",
+                  borderRadius: 8,
+                  overflow: "hidden",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                }}
+              >
+                <div
+                  onClick={() => setMinimapMinimized((v) => !v)}
+                  style={{
+                    padding: "4px 8px",
+                    fontSize: 12,
+                    cursor: "pointer",
+                    color: "white",
+                    textAlign: "center",
+                    userSelect: "none",
+                    background: "rgba(255,255,255,0.08)",
+                  }}
+                >
+                  {minimapMinimized ? "▲ MiniMap" : "▼ MiniMap"}
+                </div>
+
+                {!minimapMinimized && (
+                  <div 
+                    className="minimap-wrapper"
+                    style={{ 
+                      width: 200, 
+                      height: 150, 
+                      background: "white",
+                      position: "relative",
+                      overflow: "hidden"
+                    }}
+                  >
+                    <MiniMap
+                      nodeColor={(node) => {
+                        if (node.type === "ip") return "#22c55e";
+                        if (node.type === "op") return "#ef4444";
+                        return node.data?.color || "#7A7FEE";
+                      }}
+                      maskColor="rgba(0,0,0,0.25)"
+                      style={{
+                        backgroundColor: "white",
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+                
               </ReactFlow>
 
               <Toolbar
