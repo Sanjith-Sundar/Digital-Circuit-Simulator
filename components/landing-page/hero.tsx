@@ -18,7 +18,7 @@ export default function Hero() {
             <Link href="/circuit" className="btn-primary">
               Start Building
             </Link>
-            <a href="#features" className="btn-secondary text-white">
+            <a href="#services" className="btn-secondary text-white">
               Learn More
             </a>
           </div>
