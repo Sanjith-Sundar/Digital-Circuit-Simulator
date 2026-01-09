@@ -138,6 +138,7 @@ function CircuitMaker() {
     {}
   );
   const previousOutputValues = useRef<{ [key: string]: boolean }>({});
+  const hasFitViewOnFirstNode = useRef(false);
   const [paletteOpen, setPaletteOpen] = useState(true);
   const [pendingNode, setPendingNode] = useState<{
     type: string;
@@ -159,12 +160,11 @@ function CircuitMaker() {
   const [currentCircuitId, setCurrentCircuitId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  const [minimapMinimized, setMinimapMinimized] = useState(false);
-
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
   const [combinationalGates, setCombinationalGates] = useState<GateType[]>([]);
+  const [minimapMinimized, setMinimapMinimized] = useState(false);
 
   const addCombinationalCircuit = (gate: GateType) => {
     setCombinationalGates((prev) => {
@@ -459,15 +459,21 @@ function CircuitMaker() {
     previousOutputValues.current = newOutputValues;
   }, [edges, inputValues, nodes]);
 
+  // Zoom in only when first component is placed
   useEffect(() => {
-    if (nodes.length > 0 && reactFlowInstance) {
+    if (nodes.length === 1 && !hasFitViewOnFirstNode.current && reactFlowInstance) {
       setTimeout(() => {
         if (reactFlowInstance) {
           reactFlowInstance.fitView({ padding: 0.1 });
+          hasFitViewOnFirstNode.current = true;
         }
       }, 100);
     }
-  }, [nodes.length, edges.length, reactFlowInstance]);
+    // Reset flag when circuit is cleared
+    if (nodes.length === 0) {
+      hasFitViewOnFirstNode.current = false;
+    }
+  }, [nodes.length, reactFlowInstance]);
 
   useEffect(() => {
     if (nodes.length === 0 && edges.length === 0) {
@@ -814,7 +820,9 @@ function CircuitMaker() {
                   size={1}
                 />
                 <Controls />
-                 {/* Minimap container */}
+              </ReactFlow>
+
+              {/* Minimap container */}
               <div
                 style={{
                   position: "absolute",
@@ -868,8 +876,6 @@ function CircuitMaker() {
                   </div>
                 )}
               </div>
-                
-              </ReactFlow>
 
               <Toolbar
                 paletteOpen={paletteOpen}
